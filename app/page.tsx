@@ -15,7 +15,7 @@ const Page: NextPage = async () => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {todos.map((todo) => (
-          <TodoCard key={todo.id} todo={todo} />
+          <TodoCard key={todo.id} todo={todo} isAuthed={!!userId} />
         ))}
       </div>
     </>
