@@ -1,12 +1,14 @@
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
+import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc'
 import { clerkClient } from '@clerk/nextjs/server'
 import { TRPCError } from '@trpc/server'
 
 export const todoRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const data = await ctx.db.todo.findMany()
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const data = await ctx.db.todo.findMany({
+      where: { userId: ctx.session.userId },
+    })
 
     const posts = await Promise.all(
       data.map(async (post) => ({
