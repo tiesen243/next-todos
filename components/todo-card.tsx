@@ -30,10 +30,8 @@ export const TodoCard: React.FC<TodoProps> = ({ todo }) => (
       />
 
       <div className="flex flex-col gap-1">
-        <CardTitle>{todo.user.fullName}</CardTitle>
-        <CardDescription>
-          {todo.user.username} - {todo.createdAt.toDateString()}
-        </CardDescription>
+        <CardTitle>{todo.user.fullName ?? todo.user.username}</CardTitle>
+        <CardDescription>{todo.createdAt.toDateString()}</CardDescription>
       </div>
     </CardHeader>
 
