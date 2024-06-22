@@ -1,6 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
 
 import { Button } from '@/components/ui/button'
 import { api } from '@/lib/trpc/react'
@@ -10,9 +11,9 @@ interface Props {
 }
 
 export const DeleteTodo: React.FC<Props> = (todo) => {
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const { mutate, isPending } = api.todo.delete.useMutation({
-    onSuccess: () => router.refresh(),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: getQueryKey(api.todo.getAll) }),
   })
 
   const handleClick = async () => mutate({ id: todo.todoId })

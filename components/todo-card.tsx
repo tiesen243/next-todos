@@ -17,9 +17,8 @@ interface TodoProps {
   todo: Todo & {
     user: User
   }
-  isAuthed: boolean
 }
-export const TodoCard: React.FC<TodoProps> = ({ todo, isAuthed }) => (
+export const TodoCard: React.FC<TodoProps> = ({ todo }) => (
   <Card>
     <CardHeader className="flex-row gap-4">
       <Image
@@ -40,14 +39,12 @@ export const TodoCard: React.FC<TodoProps> = ({ todo, isAuthed }) => (
 
     <CardContent>
       <CardTitle>{todo.title}</CardTitle>
-      <CardDescription>{todo.content}</CardDescription>
+      <CardDescription className="mt-4 line-clamp-1 break-all">{todo.content}</CardDescription>
     </CardContent>
 
-    {isAuthed && (
-      <CardFooter className="grid grid-cols-2 gap-2">
-        <ToggleState todoId={todo.id} state={todo.state} />
-        <DeleteTodo todoId={todo.id} />
-      </CardFooter>
-    )}
+    <CardFooter className="grid grid-cols-2 gap-2">
+      <ToggleState todoId={todo.id} state={todo.state} />
+      <DeleteTodo todoId={todo.id} />
+    </CardFooter>
   </Card>
 )
