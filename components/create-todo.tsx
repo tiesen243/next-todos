@@ -1,29 +1,25 @@
 'use client'
 
+import { useQueryClient } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-import { FormField } from '@/components/form-field'
-import { Button } from '@/components/ui/button'
-import {
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/lib/trpc/react'
+import { FormField } from '@/components/form-field'
+import { Button } from '@ui/button'
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@ui/card'
+import { Textarea } from '@ui/textarea'
 
 export const CreateTodo: React.FC = () => {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { mutate, isPending, error } = api.todo.create.useMutation({
     onSuccess: async () => {
       toast.success('Todo created')
       router.back()
-      await new Promise((resolve) => setTimeout(resolve, 100))
-      router.refresh()
+      await queryClient.invalidateQueries({ queryKey: getQueryKey(api.todo.getAll) })
     },
   })
 

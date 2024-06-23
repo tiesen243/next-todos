@@ -1,9 +1,9 @@
 'use client'
 
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+
+import { Button } from '@ui/button'
 
 export const AuthBtn: React.FC = () => (
   <>

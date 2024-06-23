@@ -1,10 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
-import { Button } from '@/components/ui/button'
-import { api } from '@/lib/trpc/react'
+import { useQueryClient } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
 import { toast } from 'sonner'
+
+import { api } from '@/lib/trpc/react'
+import { Button } from '@ui/button'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   todoId: string
@@ -12,10 +14,13 @@ interface Props {
 
 export const DeleteTodo: React.FC<Props> = (todo) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const { mutate, isPending } = api.todo.delete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Todo deleted')
-      router.refresh()
+      await queryClient.invalidateQueries({ queryKey: getQueryKey(api.todo.getAll) })
+      router.push('/')
     },
   })
 

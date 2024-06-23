@@ -1,15 +1,9 @@
 import { buttonVariants } from '@/components/ui/button'
-import { auth } from '@clerk/nextjs/server'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 const Page: NextPage = async () => {
-  const { userId } = auth()
-
-  if (userId) redirect('/dashboard')
-
   return (
     <>
       <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
@@ -37,9 +31,8 @@ const Page: NextPage = async () => {
                   Sign In
                 </Link>
                 <Link
-                  href="#"
-                  className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                  prefetch={false}
+                  href="/dashboard"
+                  className={buttonVariants({ variant: 'outline', className: 'w-36' })}
                 >
                   Try It Now
                 </Link>

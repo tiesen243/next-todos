@@ -1,8 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { api } from '@/lib/trpc/react'
 import type { STATE } from '@prisma/client'
+
+import { api } from '@/lib/trpc/react'
+import { Button } from '@ui/button'
 
 interface Props {
   todoId: string
