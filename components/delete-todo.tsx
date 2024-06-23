@@ -2,11 +2,11 @@
 
 import { useQueryClient } from '@tanstack/react-query'
 import { getQueryKey } from '@trpc/react-query'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { api } from '@/lib/trpc/react'
 import { Button } from '@ui/button'
-import { useRouter } from 'next/navigation'
 
 interface Props {
   todoId: string
@@ -19,8 +19,8 @@ export const DeleteTodo: React.FC<Props> = (todo) => {
   const { mutate, isPending } = api.todo.delete.useMutation({
     onSuccess: async () => {
       toast.success('Todo deleted')
+      router.push('/dashboard')
       await queryClient.invalidateQueries({ queryKey: getQueryKey(api.todo.getAll) })
-      router.push('/')
     },
   })
 
