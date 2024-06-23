@@ -1,6 +1,5 @@
 'use client'
 
-import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -15,17 +14,16 @@ import {
 } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/lib/trpc/react'
-import { getQueryKey } from '@trpc/react-query'
 
 export const CreateTodo: React.FC = () => {
   const router = useRouter()
-  const queryClient = useQueryClient()
 
   const { mutate, isPending, error } = api.todo.create.useMutation({
     onSuccess: async () => {
       toast.success('Todo created')
       router.back()
-      await queryClient.invalidateQueries({ queryKey: getQueryKey(api.todo.getAll) })
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      router.refresh()
     },
   })
 

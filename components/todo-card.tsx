@@ -1,6 +1,5 @@
 import type { User } from '@clerk/nextjs/server'
 import type { Todo } from '@prisma/client'
-import Image from 'next/image'
 
 import {
   Card,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/card'
 import { DeleteTodo } from './delete-todo'
 import { ToggleState } from './toggle-state'
+import Link from 'next/link'
 
 interface TodoProps {
   todo: Todo & {
@@ -20,27 +20,16 @@ interface TodoProps {
 }
 export const TodoCard: React.FC<TodoProps> = ({ todo }) => (
   <Card>
-    <CardHeader className="flex-row gap-4">
-      <Image
-        src={todo.user.imageUrl}
-        alt={todo.user.username ?? ''}
-        width={50}
-        height={50}
-        className="aspect-square rounded-full"
-      />
-
-      <div className="flex flex-col gap-1">
-        <CardTitle>{todo.user.fullName ?? todo.user.username}</CardTitle>
+    <Link href={`/dashboard/${todo.id}`} passHref>
+      <CardHeader>
+        <CardTitle className="line-clamp-1">{todo.title}</CardTitle>
         <CardDescription>{todo.createdAt.toDateString()}</CardDescription>
-      </div>
-    </CardHeader>
+      </CardHeader>
 
-    <CardContent>
-      <CardTitle>{todo.title}</CardTitle>
-      <CardDescription className="mt-4 line-clamp-1 break-all">{todo.content}</CardDescription>
-    </CardContent>
+      <CardContent className="line-clamp-1 pb-0">{todo.content}</CardContent>
+    </Link>
 
-    <CardFooter className="grid grid-cols-2 gap-2">
+    <CardFooter className="mt-4 grid grid-cols-2 gap-2">
       <ToggleState todoId={todo.id} state={todo.state} />
       <DeleteTodo todoId={todo.id} />
     </CardFooter>

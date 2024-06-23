@@ -20,6 +20,13 @@ export const todoRouter = createTRPCRouter({
     return posts
   }),
 
+  getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => {
+    const post = await ctx.db.todo.findUnique({ where: { id: input.id } })
+    if (!post) throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' })
+
+    return post
+  }),
+
   create: protectedProcedure
     .input(z.object({ title: z.string().min(1), content: z.string().min(1) }))
     .mutation(async ({ input, ctx }) => {
@@ -52,6 +59,28 @@ export const todoRouter = createTRPCRouter({
       })
 
       return newState
+    }),
+
+  update: protectedProcedure
+    .input(
+      z.object({ id: z.string(), title: z.string().optional(), content: z.string().optional() }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const post = await ctx.db.todo.findUnique({ where: { id: input.id } })
+      if (!post) throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' })
+
+      if (post.userId !== ctx.session.userId)
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to update this post',
+        })
+
+      const newData = await ctx.db.todo.update({
+        where: { id: input.id },
+        data: { title: input.title ?? post.title, content: input.content ?? post.content },
+      })
+
+      return newData
     }),
 
   delete: protectedProcedure
